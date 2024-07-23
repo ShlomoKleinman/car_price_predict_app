@@ -28,8 +28,8 @@ def remove_manufacturer_from_model(row):
 data['model'] = data.apply(remove_manufacturer_from_model, axis=1)
 
 # Extract unique values in order to have unique list inside the app (user friendly)
-unique_manufacturers = data['manufactor'].unique()
-unique_models = data['model'].unique()
+unique_manufacturers = data['manufactor'].unique() + ["אחר"]
+unique_models = data['model'].unique() + ["אחר"]
 unique_engine_volumes = data['capacity_Engine'].unique()
 
 manufacturer_models = {}
