@@ -1,3 +1,11 @@
+import subprocess
+import sys
+try:
+    # Try to import Flask
+    from flask import Flask
+except ImportError:
+    # If Flask is not installed, install it using pip
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "flask"])
 from flask import Flask, render_template, request, jsonify
 import joblib
 import pandas as pd
