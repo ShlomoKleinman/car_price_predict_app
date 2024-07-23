@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <style>
+        /* Import Rubik font from Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap');
+
+        /* Define CSS variables for color scheme */
+        :root {
+            --primary-color: #00ffff;
+            --secondary-color: #ff00ff;
+            --bg-color: #111;
+            --text-color: #fff;
+        }
+
+        /* Global styles */
+        body {
+            font-family: 'Rubik', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            direction: rtl;
+            overflow-x: hidden;
+        }
+
+        /* Main container styles */
+        .main-container {
+            display: flex;
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        /* Form container styles with animated background */
+        .form-container {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px var(--primary-color), 0 0 40px var(--secondary-color);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated background for form container */
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                from 0deg at 50% 50%,
+                var(--primary-color) 0deg,
+                transparent 60deg,
+                transparent 300deg,
+                var(--secondary-color) 360deg
+            );
+            animation: rotate 20s linear infinite;
+            z-index: -1;
+        }
+
+        /* Keyframes for background rotation animation */
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Heading styles */
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Form layout */
+        form {
+            display: grid;
+            gap: 20px;
+            text-align: right;
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        /* Input and select styles */
+        input, select {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            font-size: 1em;
+            text-align: right;
+            transition: all 0.3s ease;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            box-sizing: border-box;
+        }
+
+        /* Custom dropdown arrow for select elements */
+        select {
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%23ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+            background-repeat: no-repeat;
+            background-position: left 10px center;
+            padding-left: 30px;
+        }
+
+        /* Styles for select options */
+        select option {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        select:focus option {
+            background-color: #fff;
+            color: #000;
+        }
+
+        /* Focus styles for inputs and selects */
+        input:focus, select:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--primary-color), 0 0 0 4px var(--secondary-color);
+        }
+
+        /* Submit button styles */
+        input[type="submit"] {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            grid-column: 1 / -1;
+        }
+
+        input[type="submit"]:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.05);
+        }
+
+        /* Result display styles */
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+
+        .result h2 {
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        /* Car image styles */
+        .car-image {
+            flex: 1;
+            background: url('https://images.unsplash.com/photo-1611016186353-9af58c69a533?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8Y2FyfHx8fHx8MTY4ODc2NzUwNA&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080') no-repeat center center;
+            background-size: cover;
+            border-radius: 20px;
+            margin-left: 40px;
+        }
+
+        /* Responsive design for smaller screens */
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            .form-container {
+                width: 100%;
+                padding: 20px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            .car-image {
+                height: 200px;
+                margin-left: 0;
+                margin-bottom: 20px;
+            }
+            form {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="form-container">
+            <!-- Welcome message -->
+            <h1>שלום {{ username }}</h1>
+            <!-- Form for car price prediction -->
+            <form action="/predict" method="post">
+                <!-- Year selection -->
+                <select name="year" required>
+                    <option value="">בחר שנה</option>
+                    {% for year in range(1990, current_year + 1)|reverse %}
+                        <option value="{{ year }}" {% if year|string == selected_year|string %}selected{% endif %}>{{ year }}</option>
+                    {% endfor %}
+                </select>
+                <!-- Manufacturer selection -->
+                <select name="manufacturer" id="manufacturer" required onchange="updateModels()">
+                    <option value="">בחר יצרן</option>
+                    {% for manuf in manufacturers %}
+                        <option value="{{ manuf }}" {% if manuf == manufacturer %}selected{% endif %}>{{ manuf }}</option>
+                    {% endfor %}
+                </select>
+                <!-- Model selection (populated by JavaScript) -->
+                <select name="model" id="model" required>
+                    <option value="">בחר דגם</option>
+                </select>
+                <!-- Other input fields -->
+                <input type="number" name="hand" placeholder="בעלות" value="{{ hand }}" required>
+                <input type="number" name="engine_volume" placeholder="נפח מנוע" value="{{ engine_volume }}" required>
+                <input type="number" name="mileage" placeholder="קילומטראז'" value="{{ mileage }}" required>
+                
+                <!-- Additional fields -->
+                <select name="transmission" required>
+                    <option value="">בחר תיבת הילוכים</option>
+                    <option value="manual" {% if transmission == 'manual' %}selected{% endif %}>ידני</option>
+                    <option value="automatic" {% if transmission == 'automatic' %}selected{% endif %}>אוטומטי</option>
+                </select>
+                <select name="engine_type" required>
+                    <option value="">בחר סוג מנוע</option>
+                    <option value="petrol" {% if engine_type == 'petrol' %}selected{% endif %}>בנזין</option>
+                    <option value="diesel" {% if engine_type == 'diesel' %}selected{% endif %}>דיזל</option>
+                    <option value="hybrid" {% if engine_type == 'hybrid' %}selected{% endif %}>היברידי</option>
+                    <option value="electric" {% if engine_type == 'electric' %}selected{% endif %}>חשמלי</option>
+                </select>
+                <select name="previous_ownership" required>
+                    <option value="">בעלות קודמת</option>
+                    <option value="private" {% if previous_ownership == 'private' %}selected{% endif %}>פרטי</option>
+                    <option value="leasing" {% if previous_ownership == 'leasing' %}selected{% endif %}>ליסינג</option>
+                </select>
+                <select name="current_ownership" required>
+                    <option value="">בעלות נוכחית</option>
+                    <option value="private" {% if current_ownership == 'private' %}selected{% endif %}>פרטי</option>
+                    <option value="leasing" {% if current_ownership == 'leasing' %}selected{% endif %}>ליסינג</option>
+                </select>
+                <input type="text" name="region" placeholder="אזור" value="{{ region }}" required>
+                <input type="text" name="city" placeholder="עיר" value="{{ city }}" required>
+
+                <input type="submit" value="חיזוי מחיר">
+            </form>
+            <!-- Display prediction result if available -->
+            {% if price %}
+            <div class="result">
+                <h2>המחיר החזוי: {{ price }} ש"ח</h2>
+            </div>
+            {% endif %}
+        </div>
+        <!-- Decorative car image -->
+        <div class="car-image"></div>
+    </div>
+
+    <script>
+        // JavaScript object containing manufacturer-model mappings
+        const manufacturerModels = {{ manufacturer_models | tojson }};
+        const selectedModel = "{{ model }}";
+
+        // Function to update model options based on selected manufacturer
+        function updateModels() {
+            const manufacturerSelect = document.getElementById('manufacturer');
+            const modelSelect = document.getElementById('model');
+            const selectedManufacturer = manufacturerSelect.value;
+            
+            // Clear existing options
+            modelSelect.innerHTML = '<option value="">בחר דגם</option>';
+            
+            if (selectedManufacturer === "") {
+                modelSelect.innerHTML = '<option value="">דגם - יש לבחור קודם יצרן </option>';
+            } else if (selectedManufacturer in manufacturerModels) {
+                for (const model of manufacturerModels[selectedManufacturer]) {
+                    const option = document.createElement('option');
+                    option.value = model;
+                    option.textContent = model;
+                    if (model === selectedModel) {
+                        option.selected = true;
+                    }
+                    modelSelect.appendChild(option);
+                }
+            }
+        }
+
+        // Call updateModels on page load to set initial state
+        document.addEventListener('DOMContentLoaded', updateModels);
+    </script>
+</body>
+</html>
