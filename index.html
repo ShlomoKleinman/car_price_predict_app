@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap');
+
+        :root {
+            --primary-color: #00ffff;
+            --secondary-color: #ff00ff;
+            --bg-color: #111;
+            --text-color: #fff;
+        }
+
+        body {
+            font-family: 'Rubik', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            direction: rtl;
+            overflow-x: hidden;
+        }
+
+        .main-container {
+            display: flex;
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        .form-container {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px var(--primary-color), 0 0 40px var(--secondary-color);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                from 0deg at 50% 50%,
+                var(--primary-color) 0deg,
+                transparent 60deg,
+                transparent 300deg,
+                var(--secondary-color) 360deg
+            );
+            animation: rotate 20s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        form {
+            display: grid;
+            gap: 20px;
+            text-align: right;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            font-size: 1em;
+            text-align: right;
+            transition: all 0.3s ease;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            box-sizing: border-box; /* Ensures the width includes padding and border */
+        }
+
+        select {
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%23ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+            background-repeat: no-repeat;
+            background-position: left 10px center;
+            padding-left: 30px;
+        }
+
+        select option {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        select:focus option {
+            background-color: #fff;
+            color: #000;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--primary-color), 0 0 0 4px var(--secondary-color);
+        }
+
+        input[type="submit"] {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.05);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+
+        .result h2 {
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .car-image {
+            flex: 1;
+            background: url('https://images.unsplash.com/photo-1611016186353-9af58c69a533?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8Y2FyfHx8fHx8MTY4ODc2NzUwNA&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080') no-repeat center center;
+            background-size: cover;
+            border-radius: 20px;
+            margin-left: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            .form-container {
+                width: 100%;
+                padding: 20px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            .car-image {
+                height: 200px;
+                margin-left: 0;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="form-container">
+            <h1>שלום {{ username }}</h1>
+            <form action="/predict" method="post">
+                <select name="year" required>
+                    <option value="">בחר שנה</option>
+                    {% for year in range(1990, current_year + 1)|reverse %}
+                        <option value="{{ year }}" {% if year|string == selected_year|string %}selected{% endif %}>{{ year }}</option>
+                    {% endfor %}
+                </select>
+                <select name="manufacturer" id="manufacturer" required onchange="updateModels()">
+                    <option value="">בחר יצרן</option>
+                    {% for manuf in manufacturers %}
+                        <option value="{{ manuf }}" {% if manuf == manufacturer %}selected{% endif %}>{{ manuf }}</option>
+                    {% endfor %}
+                </select>
+                <select name="model" id="model" required>
+                    <option value="">בחר דגם</option>
+                    <!-- Options will be populated by JavaScript -->
+                </select>
+                <input type="number" name="hand" placeholder="בעלות" value="{{ hand }}" required>
+                <input type="number" name="engine_volume" placeholder="נפח מנוע" value="{{ engine_volume }}" required>
+                <input type="number" name="mileage" placeholder="קילומטראז'" value="{{ mileage }}" required>
+                <input type="submit" value="חיזוי מחיר">
+            </form>
+            {% if price %}
+            <div class="result">
+                <h2>המחיר החזוי: {{ price }} ש"ח</h2>
+            </div>
+            {% endif %}
+        </div>
+        <div class="car-image"></div>
+    </div>
+
+    <script>
+        const manufacturerModels = {{ manufacturer_models | tojson }};
+        const selectedModel = "{{ model }}";
+
+        function updateModels() {
+            const manufacturerSelect = document.getElementById('manufacturer');
+            const modelSelect = document.getElementById('model');
+            const selectedManufacturer = manufacturerSelect.value;
+            
+            // Clear existing options
+            modelSelect.innerHTML = '<option value="">בחר דגם</option>';
+            
+            if (selectedManufacturer in manufacturerModels) {
+                for (const model of manufacturerModels[selectedManufacturer]) {
+                    const option = document.createElement('option');
+                    option.value = model;
+                    option.textContent = model;
+                    if (model === selectedModel) {
+                        option.selected = true;
+                    }
+                    modelSelect.appendChild(option);
+                }
+            }
+        }
+
+        // Call updateModels on page load to set initial state
+        document.addEventListener('DOMContentLoaded', updateModels);
+    </script>
+</body>
+</html>
